@@ -38,7 +38,12 @@ func (g *Game) Update() error {
 						new.counter++
 						g.nodeMap[ans.IP.String()] = new
 					} else {
-						g.nodeMap[ans.IP.String()] = Node{Point{500 + rand.Float32(), 500 + rand.Float32()}, ans.IP.String(), Uint32ToRGBA(rand.Uint32()), 100}
+						g.nodeMap[ans.IP.String()] = Node{
+							Point{500 + rand.Float32()*100, 500 + rand.Float32()*100},
+							ans.IP.String(),
+							Uint32ToRGBA(rand.Uint32()),
+							100,
+							100}
 					}
 				}
 			}
@@ -46,6 +51,12 @@ func (g *Game) Update() error {
 	default:
 
 	}
+
+	for key := range g.nodeMap {
+		newNode := UpdateNodePos(g, g.nodeMap[key])
+		g.nodeMap[key] = newNode
+	}
+
 	return nil
 }
 func (g *Game) Draw(screen *ebiten.Image) {
