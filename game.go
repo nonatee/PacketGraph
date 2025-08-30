@@ -2,13 +2,16 @@ package main
 
 import (
 	"fmt"
+	"image/color"
 	"math/rand"
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"golang.org/x/image/font/basicfont"
 )
 
 type Game struct {
@@ -34,13 +37,13 @@ func (g *Game) Update() error {
 					g.ipMap[ans.IP.String()] = string(ans.Name)
 					_, ok := g.nodeMap[ans.IP.String()]
 					if ok {
-						new := g.nodeMap[ans.IP.String()]
+						new := g.nodeMap[string(ans.Name)]
 						new.counter++
-						g.nodeMap[ans.IP.String()] = new
+						g.nodeMap[string(ans.Name)] = new
 					} else {
-						g.nodeMap[ans.IP.String()] = Node{
+						g.nodeMap[string(ans.Name)] = Node{
 							Point{500 + rand.Float32()*100, 500 + rand.Float32()*100},
-							ans.IP.String(),
+							string(ans.Name),
 							Uint32ToRGBA(rand.Uint32()),
 							100,
 							100}
@@ -60,8 +63,9 @@ func (g *Game) Update() error {
 	return nil
 }
 func (g *Game) Draw(screen *ebiten.Image) {
-	for _, node := range g.nodeMap {
+	for key, node := range g.nodeMap {
 		vector.DrawFilledCircle(screen, node.position.x, node.position.y, float32(node.counter), node.color, true)
+		text.Draw(screen, key, basicfont.Face7x13, int(node.position.x-node.radius), int(node.position.y), color.White)
 	}
 }
 func (g *Game) Layout(w, h int) (int, int) { return 1000, 1000 }
