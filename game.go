@@ -7,7 +7,6 @@ import (
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
-	"github.com/google/gopacket/pcap"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/hajimehoshi/ebiten/v2/vector"
@@ -18,7 +17,6 @@ type Game struct {
 	packetChan chan gopacket.Packet
 	ipMap      map[string]string
 	nodeMap    map[string]Node
-	handle     *pcap.Handle
 }
 
 func (g *Game) Update() error {

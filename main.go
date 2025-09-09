@@ -7,6 +7,5 @@ import (
 func main() {
 	game := Init()
 	ebiten.RunGame(game)
-	game.handle.Close()
 	close(game.packetChan)
 }
